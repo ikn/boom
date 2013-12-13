@@ -1,0 +1,6 @@
+/build/
+/bak/
+*.so
+py_ver
+*.py[co]
+__pycache__/
