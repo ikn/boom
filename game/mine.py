@@ -6,12 +6,15 @@ from .entity import Entity
 
 
 class Mine (Entity):
-    def __init__ (self, real, player, vel, dirn, *args, **kwargs):
-        Entity.__init__(self, vel, *args, **kwargs)
+    def __init__ (self, real, within, player, vel, dirn, pos):
+        self.size = conf.MINE['size']
+        r = Rect((0, 0), self.size)
+        r.center = pos
+
+        Entity.__init__(self, vel, *r.clamp(within).topleft)
 
         self.real = real
         self.player = player
-        self.size = conf.MINE['size']
         self.placed = None
 
         self.graphics.add(gfx.Colour(

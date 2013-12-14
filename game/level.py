@@ -54,11 +54,16 @@ class Level (World):
             self.add(Lasers(player, mines))
         return bool(mines)
 
-    def detonate_mines (self, player, destroy):
-        for group in self.mines[player.id].itervalues():
-            for m in group:
+    def detonate_mines (self, mines, destroy):
+        # mines is player or list of mines
+        if not isinstance(mines, list):
+            mines = sum(self.mines[mines.id].itervalues(), [])
+        for m in mines:
+            ms = self.mines[m.player]['real' if m.real else 'dummy']
+            if m in ms:
                 m.explode(destroy)
-        self.mines[player.id] = {'real': [], 'dummy': []}
+                ms.remove(m)
+            # else it already got removed
 
     def damage (self, pos, radius):
         x, y = pos

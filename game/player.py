@@ -41,8 +41,7 @@ class Lasers (entity.Entity):
             add(g, -pad, -dy)
 
     def finished (self):
-        for p in self.world.players:
-            self.world.detonate_mines(p, True)
+        self.world.detonate_mines(self.mines, True)
         self.world.rm(self)
 
 
@@ -117,8 +116,9 @@ class Player (Entity):
         dirn = max(dirns)[2]
 
         side = ('left', 'top', 'right', 'bottom')[dirn]
-        pos = getattr(self.rect, 'mid' + side)
-        self.world.add_mine(Mine(real, self.id, vel, dirn, *pos))
+        r = self.rect
+        pos = getattr(r, 'mid' + side)
+        self.world.add_mine(Mine(real, r, self.id, vel, dirn, pos))
 
     def throw_real (self):
         if not self.thrown_real:
