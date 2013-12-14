@@ -1,0 +1,15 @@
+axis move0
+    neg kbd LEFT
+    pos kbd RIGHT
+
+button jump0 DOWN HELD
+    kbd UP
+
+axis move1
+    neg kbd a
+    pos kbd d
+    pos kbd e
+
+button jump1 DOWN HELD
+    kbd w
+    kbd COMMA
