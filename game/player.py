@@ -56,6 +56,7 @@ class Player (Entity):
         self.dirn = [0, 0]
         self.dead = False
         self.lasers_left = conf.PLAYER['num_lasers']
+        self.throwing = False
 
         self.graphics.add(gfx.Colour(
             conf.PLAYER_COLOURS[n], self.size, conf.LAYERS['player']
@@ -65,6 +66,11 @@ class Player (Entity):
         Entity.added(self)
         self.done_jumping = \
             self.world.scheduler.counter(conf.PLAYER['jump_time'])
+
+    def update (self):
+        Entity.update(self)
+        if self.throwing:
+            self.throw_time += self.world.scheduler.frame
 
     def collide (self, axis, sgn):
         pass
@@ -94,12 +100,33 @@ class Player (Entity):
         else:
             return
 
-    def throw (self, real):
+    def throw (self, real, evt):
+        down = evt[bmode.DOWN]
+        up = evt[bmode.UP]
+        while True:
+            if self.throwing:
+                if up:
+                    up -= 1
+                    self.release(real, self.throw_time)
+                    self.throwing = False
+                    yield None
+                else:
+                    break
+            # now self.throwing is False
+            if down:
+                down -= 1
+                self.throwing = True
+                self.throw_time = 0
+            else:
+                break
+
+    def release (self, real, force):
         vel = list(self.vel)
         dx, dy = dirn = self.dirn
         adirn = (dx * dx + dy * dy) ** .5
         if adirn:
-            s = conf.PLAYER['throw_speed']
+            s = (min(force, conf.PLAYER['max_throw_speed']) *
+                 conf.PLAYER['throw_speed'])
             vel[0] += s * dx / adirn
             vel[1] += s * dy / adirn
 
@@ -120,13 +147,14 @@ class Player (Entity):
         pos = getattr(r, 'mid' + side)
         self.world.add_mine(Mine(real, r, self.id, vel, dirn, pos))
 
-    def throw_real (self):
+    def throw_real (self, evt):
         if not self.thrown_real:
-            self.throw(self.have_real)
-            self.thrown_real = True
+            for x in self.throw(self.have_real, evt):
+                self.thrown_real = True
+                break
 
-    def throw_dummy (self):
-        self.throw(False)
+    def throw_dummy (self, evt):
+        list(self.throw(False, evt))
 
     def detonate (self):
         self.world.detonate_mines(self, False)

@@ -32,7 +32,8 @@ class Conf (object):
         'jump_time': .11,
         'jump_initial': 9,
         'jump_continue': 1.9,
-        'throw_speed': 10,
+        'throw_speed': 50,
+        'max_throw_speed': .5,
         'num_lasers': 3
     }
     LASER = {

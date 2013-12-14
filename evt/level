@@ -15,11 +15,11 @@ button jump0 DOWN HELD
     kbd UP
     pad <x> button 0
 
-button throw_real0 DOWN
+button throw_real0 DOWN UP
     kbd RCTRL
     pad <x> button 3
 
-button throw_dummy0 DOWN
+button throw_dummy0 DOWN UP
     kbd RSHIFT
     pad <x> button 2
 
@@ -49,10 +49,10 @@ button jump1 DOWN HELD
     kbd w
     kbd COMMA
 
-button throw_real1 DOWN
+button throw_real1 DOWN UP
     kbd LSHIFT
 
-button throw_dummy1 DOWN
+button throw_dummy1 DOWN UP
     kbd SPACE
 
 button detonate1 DOWN
