@@ -18,6 +18,8 @@ class Level (World):
         self.border = Rect((0, 0), gm.orig_size)
 
         self.evthandler.load('level')
+        self.evthandler.assign_devices(x=0, y=1)
+        self.evthandler.set_deadzones(('pad', conf.PAD_DEADZONE))
         self.has_real = random.randrange(num_players)
         for i in xrange(num_players):
             self.add_player(i, self.has_real == i)

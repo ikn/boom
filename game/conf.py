@@ -4,6 +4,8 @@ class Conf (object):
     #WINDOW_ICON = 'icon.png'
     RES_W = (960, 540)
 
+    PAD_DEADZONE = .2
+
     LEVELS = {
         'main': {
             'rects': [

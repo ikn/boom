@@ -54,7 +54,7 @@ class Player (Entity):
         self.size = conf.PLAYER['size']
         self.have_real = have_real
         self.thrown_real = False
-        self.dirn = 3
+        self.dirn = [0, 0]
         self.dead = False
         self.lasers_left = conf.PLAYER['num_lasers']
 
@@ -80,17 +80,7 @@ class Player (Entity):
         return f
 
     def aim (self, pos):
-        dirns = []
-        for d in xrange(4):
-            axis = d % 2
-            this_sgn = 1 if d >= 2 else -1
-            x = pos[axis]
-            sgn = 1 if x > 0 else -1
-            if sgn != this_sgn:
-                x = 0
-            dirns.append((sgn * x, conf.THROW_DIRN_PRIO[d], d))
-
-        self.dirn = max(dirns)[2]
+        self.dirn = pos
 
     def move (self, dirn):
         speed = conf.PLAYER['move_ground' if self.on_sfc[1] else 'move_air']
@@ -104,12 +94,27 @@ class Player (Entity):
             self.vel[1] -= conf.PLAYER['jump_continue']
         else:
             return
-        self.dirn = 1
 
     def throw (self, real):
-        dirn = self.dirn
         vel = list(self.vel)
-        vel[dirn % 2] += (1 if dirn >= 2 else -1) * conf.PLAYER['throw_speed']
+        dx, dy = dirn = self.dirn
+        adirn = (dx * dx + dy * dy) ** .5
+        if adirn:
+            s = conf.PLAYER['throw_speed']
+            vel[0] += s * dx / adirn
+            vel[1] += s * dy / adirn
+
+        pos = dirn
+        dirns = []
+        for d in xrange(4):
+            axis = d % 2
+            this_sgn = 1 if d >= 2 else -1
+            x = pos[axis]
+            sgn = 1 if x > 0 else -1
+            if sgn != this_sgn:
+                x = 0
+            dirns.append((sgn * x, conf.THROW_DIRN_PRIO[d], d))
+        dirn = max(dirns)[2]
 
         side = ('left', 'top', 'right', 'bottom')[dirn]
         pos = getattr(self.rect, 'mid' + side)
