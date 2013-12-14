@@ -18,9 +18,9 @@ class Level (World):
         self.border = Rect((0, 0), gm.orig_size)
 
         self.evthandler.load('level')
-        has_real = random.randrange(num_players)
+        self.has_real = random.randrange(num_players)
         for i in xrange(num_players):
-            self.add_player(i, has_real == i)
+            self.add_player(i, self.has_real == i)
 
         layers = conf.LAYERS
         gm.add(gfx.Colour(conf.BG_COLOUR, gm.orig_size, layers['bg']))
@@ -57,4 +57,12 @@ class Level (World):
             px, py = p.rect.center
             if ((x - px) ** 2 + (y - py) ** 2) ** .5 <= radius:
                 p.die()
-        # TODO: check for victory conditions
+
+        alive = [p.id for p in self.players if not p.dead]
+
+        from .engine.util import normalise_colour
+        cs = [normalise_colour(conf.PLAYER_COLOURS[i]) for i in alive]
+        cs.append((0, 0, 0))
+        c = [sum(l[:3]) for l in zip(*cs)]
+        self.graphics.fade_to(2, c)
+        self.scheduler.add_timeout(conf.GAME.quit_world, 2)
