@@ -26,20 +26,22 @@ class Mine (Entity):
         if self.placed is None:
             Entity.update(self)
 
-    def explode (self):
+    def explode (self, destroy):
         pos = self.rect.center
-        if self.real:
+        if not destroy and self.real:
             self.world.damage(pos, conf.MINE['explosion_radius'])
 
         axis, sgn = self.placed or (None, None)
-        self.world.add(Explosion(self.real, self.vel, axis, sgn, *pos))
+        mode = 'crumble' if destroy else ('explode' if self.real else 'dud')
+        self.world.add(DeadMine(mode, self.vel, axis, sgn, *pos))
         self.world.rm(self)
 
 
-class Explosion (entity.Entity):
-    def __init__ (self, real, vel, axis, sgn, *args, **kwargs):
+class DeadMine (entity.Entity):
+    def __init__ (self, mode, vel, axis, sgn, *args, **kwargs):
         entity.Entity.__init__(self, *args, **kwargs)
         self.vel = list(vel)
+        # mode: explode, dud, crumble
 
     def added (self):
         # TODO: use animation callback (has one?)

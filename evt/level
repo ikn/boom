@@ -20,6 +20,9 @@ button throw_dummy0 DOWN
 button detonate0 DOWN
     kbd RETURN
 
+button destroy0 DOWN
+    kbd BACKSPACE
+
 axis2 aim1
     left kbd a
     up kbd w
@@ -46,3 +49,6 @@ button throw_dummy1 DOWN
 
 button detonate1 DOWN
     kbd LCTRL
+
+button destroy1 DOWN
+    kbd TAB

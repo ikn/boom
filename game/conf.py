@@ -16,6 +16,7 @@ class Conf (object):
     GRAVITY = 1
     FRICTION = (.8, .8)
     AIR_RESISTANCE = (.95, .95)
+    THROW_DIRN_PRIO = [1, 0, 1, 2]
     MINE = {
         'offset': (0, 0),
         'size': (10, 10),
@@ -29,7 +30,13 @@ class Conf (object):
         'jump_time': .11,
         'jump_initial': 9,
         'jump_continue': 1.9,
-        'throw_speed': 10
+        'throw_speed': 10,
+        'num_lasers': 3
+    }
+    LASER = {
+        'time': .2,
+        'width': 3,
+        'colour': (255, 0, 0, 255)
     }
 
     # graphics
@@ -40,6 +47,7 @@ class Conf (object):
     LAYERS = {
         'bg': 1,
         'rect': 0,
-        'player': -1,
-        'mine': -2
+        'laser': -1,
+        'player': -2,
+        'mine': -3
     }

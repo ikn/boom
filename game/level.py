@@ -5,7 +5,7 @@ from pygame import Rect
 from .engine import conf, gfx
 from .engine.game import World
 
-from .player import Player
+from .player import Player, Lasers
 
 
 class Level (World):
@@ -37,7 +37,8 @@ class Level (World):
         n = str(n)
         eh = self.evthandler
         for action in (
-            'aim', 'move', 'jump', 'throw_real', 'throw_dummy', 'detonate'
+            'aim', 'move', 'jump', 'throw_real', 'throw_dummy', 'detonate',
+            'destroy'
         ):
             eh[action + n].cb(p.action(action))
 
@@ -45,10 +46,16 @@ class Level (World):
         self.mines[m.player]['real' if m.real else 'dummy'].append(m)
         self.add(m)
 
-    def detonate_mines (self, player):
+    def add_lasers (self, player):
+        mines = sum((sum(mines.itervalues(), []) for mines in self.mines), [])
+        if mines:
+            self.add(Lasers(player, mines))
+        return bool(mines)
+
+    def detonate_mines (self, player, destroy):
         for group in self.mines[player.id].itervalues():
             for m in group:
-                m.explode()
+                m.explode(destroy)
         self.mines[player.id] = {'real': [], 'dummy': []}
 
     def damage (self, pos, radius):

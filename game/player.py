@@ -1,11 +1,49 @@
-from .engine import conf, gfx, util
+from math import atan2, degrees
+
+from pygame import Rect
+from .engine import conf, gfx, util, entity
 from .engine.evt import bmode
 
 from .entity import Entity
 from .mine import Mine
 
 
-throw_dirn_prio = [1, 0, 1, 2]
+class Lasers (entity.Entity):
+    def __init__ (self, player, mines):
+        entity.Entity.__init__(self, *player.rect.center)
+        self.player = player
+        self.mines = mines
+
+    def added (self):
+        self.world.scheduler.add_timeout(self.finished, conf.LASER['time'])
+
+    def update (self):
+        w = conf.LASER['width']
+        c = conf.LASER['colour']
+        l = conf.LAYERS['laser']
+        G = gfx.Graphic
+        x, y = self.player.rect.center
+        pad = 5
+
+        self.graphics.rm(*self.graphics._graphics)
+        self.graphics.pos = (x, y)
+        add = self.graphics.add
+        for m in self.mines:
+            mx, my = m.rect.center
+            dist = ((mx - x) ** 2 + (my - y) ** 2) ** .5
+            sfc = util.blank_sfc((dist + 2 * pad, w + 2 * pad))
+            sfc.fill(c, (pad, pad, dist, w))
+
+            g = G(sfc, layer=l)
+            dy = pad + w / 2
+            g.rot_anchor = (pad, dy)
+            g.rotate(atan2(y - my, mx - x))
+            add(g, -pad, -dy)
+
+    def finished (self):
+        for p in self.world.players:
+            self.world.detonate_mines(p, True)
+        self.world.rm(self)
 
 
 class Player (Entity):
@@ -18,6 +56,7 @@ class Player (Entity):
         self.thrown_real = False
         self.dirn = 3
         self.dead = False
+        self.lasers_left = conf.PLAYER['num_lasers']
 
         self.graphics.add(gfx.Colour(
             conf.PLAYER_COLOURS[n], self.size, conf.LAYERS['player']
@@ -49,7 +88,7 @@ class Player (Entity):
             sgn = 1 if x > 0 else -1
             if sgn != this_sgn:
                 x = 0
-            dirns.append((sgn * x, throw_dirn_prio[d], d))
+            dirns.append((sgn * x, conf.THROW_DIRN_PRIO[d], d))
 
         self.dirn = max(dirns)[2]
 
@@ -85,7 +124,12 @@ class Player (Entity):
         self.throw(False)
 
     def detonate (self):
-        self.world.detonate_mines(self)
+        self.world.detonate_mines(self, False)
+
+    def destroy (self):
+        if self.lasers_left:
+            if self.world.add_lasers(self):
+                self.lasers_left -= 1
 
     def die (self):
         # TODO: graphics
