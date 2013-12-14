@@ -16,6 +16,10 @@ class Conf (object):
     GRAVITY = 1
     FRICTION = (.8, .8)
     AIR_RESISTANCE = (.95, .95)
+    MINE = {
+        'offset': (0, 0),
+        'size': (10, 10)
+    }
     PLAYER = {
         'offset': (0, 0), # of graphics from hitbox
         'size': (20, 50),
@@ -30,8 +34,10 @@ class Conf (object):
     BG_COLOUR = 'aaa'
     RECT_COLOUR = '333'
     PLAYER_COLOURS = ['d33', '151']
+    MINE_COLOUR = '000'
     LAYERS = {
         'bg': 1,
         'rect': 0,
-        'player': -1
+        'player': -1,
+        'mine': -2
     }

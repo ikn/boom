@@ -5,6 +5,12 @@ axis move0
 button jump0 DOWN HELD
     kbd UP
 
+button throw_real0 DOWN
+    kbd RCTRL
+
+button throw_dummy0 DOWN
+    kbd RSHIFT
+
 axis move1
     neg kbd a
     pos kbd d
@@ -13,3 +19,9 @@ axis move1
 button jump1 DOWN HELD
     kbd w
     kbd COMMA
+
+button throw_real1 DOWN
+    kbd LSHIFT
+
+button throw_dummy1 DOWN
+    kbd SPACE

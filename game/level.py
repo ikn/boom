@@ -10,6 +10,7 @@ class Level (World):
     def init (self, name='main', num_players=2):
         self.name = name
         self.players = []
+        self.mines = {'real': [], 'dummy': []}
         self.rects = []
         gm = self.graphics
         self.border = Rect((0, 0), gm.orig_size)
@@ -27,7 +28,14 @@ class Level (World):
     def add_player (self, n):
         x, y = (50 * n, 50)
         p = Player(n, x, y)
-        self.evthandler['move' + str(n)].cb(p.move)
-        self.evthandler['jump' + str(n)].cb(p.jump)
         self.players.append(p)
         self.add(p)
+
+        n = str(n)
+        eh = self.evthandler
+        for action in ('move', 'jump', 'throw_real', 'throw_dummy'):
+            eh[action + n].cb(getattr(p, action))
+
+    def add_mine (self, real, m):
+        self.mines['real' if real else 'dummy'].append(m)
+        self.add(m)
