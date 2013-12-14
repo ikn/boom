@@ -1,3 +1,9 @@
+axis2 aim0
+    left kbd LEFT
+    up kbd UP
+    right kbd RIGHT
+    down kbd DOWN
+
 axis move0
     neg kbd LEFT
     pos kbd RIGHT
@@ -10,6 +16,18 @@ button throw_real0 DOWN
 
 button throw_dummy0 DOWN
     kbd RSHIFT
+
+button detonate0 DOWN
+    kbd RETURN
+
+axis2 aim1
+    left kbd a
+    up kbd w
+    up kbd COMMA
+    right kbd d
+    right kbd e
+    down kbd s
+    down kbd o
 
 axis move1
     neg kbd a
@@ -25,3 +43,6 @@ button throw_real1 DOWN
 
 button throw_dummy1 DOWN
     kbd SPACE
+
+button detonate1 DOWN
+    kbd LCTRL

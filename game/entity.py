@@ -3,8 +3,9 @@ from .engine import conf, entity
 
 
 class Entity (entity.Entity):
-    # subclasses must implement size as hitbox size
-    # top-left is at (0, 0) in graphics
+    # subclasses must implement:
+    #   size: hitbox size (top-left is at (0, 0) in `graphics`)
+    #   collide(axis, sgn)
     def __init__ (self, vel, *args, **kwargs):
         entity.Entity.__init__(self, *args, **kwargs)
         self.vel = list(vel) or [0, 0]
@@ -15,6 +16,7 @@ class Entity (entity.Entity):
 
     @property
     def rect (self):
+        # hitbox
         return Rect(self.graphics.pos, self.size)
 
     def update (self):
@@ -43,6 +45,8 @@ class Entity (entity.Entity):
                 temp_pr = pr.move(dp)
                 if (not self.world.border.contains(temp_pr) or
                     temp_pr.collidelist(rects) != -1):
+                    # collision
+                    self.collide(i, sgn)
                     on_sfc[i] = sgn
                     dp[i] -= sgn
                     v[i] = 0

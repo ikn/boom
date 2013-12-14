@@ -12,13 +12,14 @@ class Conf (object):
         }
     }
 
-    # physics
+    # physics/gameplay
     GRAVITY = 1
     FRICTION = (.8, .8)
     AIR_RESISTANCE = (.95, .95)
     MINE = {
         'offset': (0, 0),
-        'size': (10, 10)
+        'size': (10, 10),
+        'explosion_radius': 125
     }
     PLAYER = {
         'offset': (0, 0), # of graphics from hitbox
@@ -27,7 +28,8 @@ class Conf (object):
         'move_air': .3,
         'jump_time': .11,
         'jump_initial': 9,
-        'jump_continue': 1.9
+        'jump_continue': 1.9,
+        'throw_speed': 10
     }
 
     # graphics
