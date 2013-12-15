@@ -47,9 +47,10 @@ class Conf (object):
     AIR_RESISTANCE = (.95, .95)
     THROW_DIRN_PRIO = [1, 0, 1, 2]
     MINE = {
-        'offset': (0, 0),
+        'offset': (-13, -4), # of graphics from hitbox
         'size': (8, 8),
-        'explosion_radius': 125
+        'explosion_radius': 125,
+        'animation_frame_time': .4
     }
     PLAYER = {
         'offset': (0, 0), # of graphics from hitbox
@@ -76,7 +77,7 @@ class Conf (object):
     }
 
     # graphics
-    BG_COLOUR = 'aaa'
+    BG_COLOUR = 'fff'
     RECT_COLOUR = '333'
     PLAYER_COLOURS = ['d33', '151']
     MINE_COLOUR = '000'

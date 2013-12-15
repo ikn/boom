@@ -27,7 +27,7 @@ class Lasers (entity.Entity):
         x, y = self.player.rect.center
         pad = 5
 
-        self.graphics.rm(*self.graphics._graphics)
+        self.graphics.rm(*self.graphics)
         self.graphics.pos = (x, y)
         add = self.graphics.add
         for m in self.mines:

@@ -1,3 +1,6 @@
+from math import pi
+
+import pygame as pg
 from pygame import Rect
 from .engine import conf, gfx, entity
 from .engine.evt import bmode
@@ -17,12 +20,22 @@ class Mine (Entity):
         self.player = player
         self.placed = None
 
-        self.graphics.add(gfx.Colour(
-            conf.MINE_COLOUR, self.size, conf.LAYERS['mine']
-        ), *conf.MINE['offset'])
+    def added (self):
+        Entity.added(self)
+
+        dx, dy = conf.MINE['offset']
+        g = gfx.Animation(
+            gfx.util.Spritemap('mine.png', nrows=2), layer=conf.LAYERS['mine'],
+            scheduler=self.world.scheduler
+        ).add('run', frame_time=conf.MINE['animation_frame_time']).play('run')
+        self.graphics.add(g, dx, dy)
+        g.rot_origin = Rect((-dx, -dy), self.size).center
+        g.rotate_fn = lambda sfc, angle: \
+            pg.transform.rotate(sfc, angle * 180 / pi)
 
     def collide (self, axis, sgn, v):
-        # TODO: fix angle/pos
+        for g in self.graphics:
+            g.angle = (pi / 2) * (2 - (axis + sgn))
         self.placed = (axis, sgn)
         self.world.play_snd('place')
 
@@ -44,9 +57,9 @@ class Mine (Entity):
 
 class DeadMine (entity.Entity):
     def __init__ (self, mode, vel, axis, sgn, *args, **kwargs):
+        # mode: explode, dud, crumble
         entity.Entity.__init__(self, *args, **kwargs)
         self.vel = list(vel)
-        # mode: explode, dud, crumble
 
     def added (self):
         # TODO: use animation callback (has one?)
