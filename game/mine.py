@@ -45,6 +45,7 @@ class Mine (Entity):
             g.rotate_fn = lambda sfc, angle: \
                 pg.transform.rotate(sfc, angle * 180 / pi)
             g.angle = (pi / 2) * (2 - (axis + sgn))
+        self.vel = (0, 0)
         self.placed = (axis, sgn)
         self.world.play_snd('place')
 
@@ -60,21 +61,40 @@ class Mine (Entity):
         axis, sgn = self.placed or (None, None)
         mode = 'crumble' if destroy else ('explode' if self.real else 'dud')
         self.world.play_snd(mode)
-        self.world.add(DeadMine(mode, self.vel, axis, sgn, *pos))
+        self.world.add(DeadMine(mode, pos, self.vel, axis, sgn))
         self.world.rm(self)
 
 
 class DeadMine (entity.Entity):
-    def __init__ (self, mode, vel, axis, sgn, *args, **kwargs):
+    def __init__ (self, mode, pos, vel, axis, sgn):
         # mode: explode, dud, crumble
-        entity.Entity.__init__(self, *args, **kwargs)
+        entity.Entity.__init__(self, *pos)
+
+        self.mode = mode
         self.vel = list(vel)
 
     def added (self):
         # TODO: use animation callback (has one?)
         self.world.scheduler.counter(1).reset().cb(self.finished)
 
+        g = gfx.Animation(
+            gfx.util.Spritemap('mine.png', nrows=2), layer=conf.LAYERS['mine'],
+            scheduler=self.world.scheduler
+        ).add('run', frame_time=conf.MINE['animation_frame_time']).play('run')
+
+        settings = conf.DEAD_MINE_GRAPHICS.get(self.mode)
+        if settings is not None:
+            g = gfx.Animation(
+                gfx.util.Spritemap(self.mode + '.png',
+                                   ncols=settings['ncols']),
+                self.graphics.pos, conf.LAYERS['deadmine'],
+                self.world.scheduler
+            ).add('run', frame_time=settings['frame_time']).play('run', False)
+            self.graphics.add(g, *settings['offset'])
+
     def update (self):
+        for i in (0, 1):
+            self.vel[i] *= conf.DEAD_MINE_DAMPING
         self.graphics.move_by(*self.vel)
 
     def finished (self):

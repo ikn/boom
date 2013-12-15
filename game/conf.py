@@ -48,6 +48,7 @@ class Conf (object):
     GRAVITY = 1
     FRICTION = (.8, .8)
     AIR_RESISTANCE = (.95, .95)
+    DEAD_MINE_DAMPING = .9
     THROW_DIRN_PRIO = [1, 0, 1, 2]
     MINE = {
         'offset': (-13, -4), # of graphics from hitbox
@@ -77,12 +78,12 @@ class Conf (object):
     }
     LASER = {
         'time': .3,
-        'width': 3,
-        'colour': (255, 0, 0, 255)
+        'width': 4,
+        'colour': (180, 20, 20, 255)
     }
 
     # graphics
-    BG_COLOUR = 'fff'
+    BG_COLOUR = '050010'
     RECT_COLOUR = '333'
     PLAYER_COLOURS = ['d33', '151']
     MINE_COLOUR = '000'
@@ -91,5 +92,14 @@ class Conf (object):
         'rect': 0,
         'player': -1,
         'mine': -2,
-        'laser': -3
+        'deadmine': -3,
+        'laser': -4
+    }
+    # offset: of graphics from mine's centre
+    DEAD_MINE_GRAPHICS = {
+        'dud': {
+            'offset': (-22, -59),
+            'ncols': 5,
+            'frame_time': .2
+        }
     }
