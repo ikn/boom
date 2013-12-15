@@ -31,6 +31,7 @@ executable.
     CONTROLS
 
 F10: minimise
+alt + F4, escape: exit
 
     LICENSING
 

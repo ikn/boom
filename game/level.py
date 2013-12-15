@@ -17,9 +17,11 @@ class Level (World):
         gm = self.graphics
         self.border = Rect((0, 0), gm.orig_size)
 
-        self.evthandler.load('level')
-        self.evthandler.assign_devices(x=0, y=1)
-        self.evthandler.set_deadzones(('pad', conf.PAD_DEADZONE))
+        eh = self.evthandler
+        eh.load('level')
+        eh.assign_devices(x=0, y=1)
+        eh.set_deadzones(('pad', conf.PAD_DEADZONE))
+        eh['quit'].cb(lambda: conf.GAME.quit_world())
         self.has_real = random.randrange(num_players)
         for i in xrange(num_players):
             self.add_player(i, self.has_real == i)

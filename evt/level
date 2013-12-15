@@ -1,3 +1,6 @@
+button quit DOWN
+    kbd ESCAPE
+
 axis2 aim0
     left kbd LEFT
     up kbd UP
