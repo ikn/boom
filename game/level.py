@@ -9,6 +9,24 @@ from .engine.game import World
 from .player import Player, Lasers
 
 
+class Intro (World):
+    def init (self):
+        n_pads = pg.joystick.get_count()
+        if n_pads == 0:
+            img = 'nopads'
+        elif n_pads == 1:
+            img = '1pad'
+        else:
+            img = '2pads'
+        self.graphics.add(
+            gfx.Colour('fff', self.graphics.orig_size, layer=1),
+            gfx.Graphic('intro-{0}.png'.format(img))
+        )
+
+        self.evthandler.add((pg.KEYDOWN,
+                             lambda: conf.GAME.switch_world(Level)))
+
+
 class Level (World):
     def init (self, name='main'):
         self.name = name
@@ -97,11 +115,8 @@ class Level (World):
             if ((x - px) ** 2 + (y - py) ** 2) ** .5 <= radius:
                 p.die()
 
-        alive = [p.id for p in self.players if not p.dead]
+        self.end()
 
-        from .engine.util import normalise_colour
-        cs = [normalise_colour(conf.PLAYER_COLOURS[i]) for i in alive]
-        cs.append((0, 0, 0))
-        c = [sum(l[:3]) for l in zip(*cs)]
-        self.graphics.fade_to(2, c)
-        #self.scheduler.add_timeout(conf.GAME.quit_world, 2)
+    def end (self):
+        self.scheduler.add_timeout(conf.GAME.quit_world, 2)
+        alive = [p.id for p in self.players if not p.dead]
