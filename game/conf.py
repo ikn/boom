@@ -11,6 +11,7 @@ class Conf (object):
     SOUND_VOLUMES = dd(1, {
         'collide': 1,
         'jump': .6,
+        'walljump': .6,
         'walk': .5,
         'throw': .6,
         'place': .4,
@@ -22,6 +23,7 @@ class Conf (object):
     MAX_SOUNDS = dd(5)
     SOUND_ALIASES = {
         'jump': 'clang',
+        'walljump': 'clang',
         'collide': 'clang',
         'walk': 'miniclang'
     }
@@ -33,7 +35,8 @@ class Conf (object):
     LEVELS = {
         'main': {
             'rects': [
-                (0, 450, 960, 90)
+                (0, 450, 960, 90),
+                (750, 0, 50, 400)
             ]
         }
     }
@@ -45,17 +48,23 @@ class Conf (object):
     THROW_DIRN_PRIO = [1, 0, 1, 2]
     MINE = {
         'offset': (0, 0),
-        'size': (10, 10),
+        'size': (8, 8),
         'explosion_radius': 125
     }
     PLAYER = {
         'offset': (0, 0), # of graphics from hitbox
-        'size': (20, 50),
+        'size': (40, 40),
         'move_ground': 2.5,
         'move_air': .3,
-        'jump_time': .11,
-        'jump_initial': 9,
-        'jump_continue': 1.9,
+        'jump': {
+            'time': .11,
+            'initial': 10,
+            'continue': 2
+        },
+        'walljump': {
+            'vert': .6,
+            'horiz': .6
+        },
         'throw_speed': 50,
         'max_throw_speed': .5,
         'num_lasers': 3

@@ -73,7 +73,7 @@ class Player (Entity):
     def added (self):
         Entity.added(self)
         C = self.world.scheduler.counter
-        self.done_jumping = C(conf.PLAYER['jump_time'])
+        self.done_jumping = C(conf.PLAYER['jump']['time'])
         self.walk_counter = C(0, True).reset().cb(self.walk_sound)
         self.walk_counter.pause()
         self.walked = False
@@ -113,14 +113,21 @@ class Player (Entity):
             self.vel[0] += dirn * speed
 
     def jump (self, evt):
-        if evt[bmode.DOWN] and self.on_sfc[1] == 1:
-            self.world.play_snd('jump')
-            self.vel[1] -= conf.PLAYER['jump_initial']
-            self.done_jumping.reset()
+        if evt[bmode.DOWN]:
+            s = conf.PLAYER['jump']['initial']
+            if self.on_sfc[1] == 1:
+                self.world.play_snd('jump')
+                self.vel[1] -= s
+                self.done_jumping.reset()
+            elif self.on_sfc[0]:
+                # wall jump
+                self.world.play_snd('walljump')
+                wj = conf.PLAYER['walljump']
+                self.vel[0] -= self.on_sfc[0] * s * wj['horiz']
+                self.vel[1] -= s * wj['vert']
+                self.done_jumping.reset()
         elif evt[bmode.HELD] and not self.done_jumping:
-            self.vel[1] -= conf.PLAYER['jump_continue']
-        else:
-            return
+            self.vel[1] -= conf.PLAYER['jump']['continue']
 
     def throw (self, real, evt):
         down = evt[bmode.DOWN]
