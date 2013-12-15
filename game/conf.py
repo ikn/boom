@@ -10,6 +10,17 @@ class Conf (object):
     WINDOW_ICON = os.path.join(conf.IMG_DIR, 'icon.png')
     RES_W = (960, 540)
 
+    # remove fullscreen keys since they disable KEYDOWN on enter without alt
+    GAME_EVENTS = '''
+button _game_quit DOWN
+    [ALT] kbd F4
+
+button _game_minimise DOWN
+    kbd F10
+
+button _game_fullscreen DOWN
+'''
+
     SOUND_VOLUME = dd(1)
     SOUND_VOLUMES = dd(1, {
         'collide': 1,
@@ -80,7 +91,8 @@ class Conf (object):
             'x_offset_multiple': 10,
             'y_offset': 8,
             'frame_time': .1
-        }
+        },
+        'colours': ['5c4a2c', '2a5853']
     }
     LASER = {
         'time': .3,
@@ -90,10 +102,10 @@ class Conf (object):
     LAYERS = {
         'bg': 1,
         'rect': 0,
-        'player0': -1,
-        'legs0': -2,
-        'player1': -3,
-        'legs1': -4,
+        'player1': -1,
+        'legs1': -2,
+        'player0': -3,
+        'legs0': -4,
         'mine': -5,
         'deadmine': -6,
         'laser': -7
@@ -106,3 +118,8 @@ class Conf (object):
             'frame_time': .1
         }
     }
+
+    START_END_TIME = .5
+    FADE_IN_TIME = 1
+    FADE_OUT_TIME = 1
+    END_TIME = 2

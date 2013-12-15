@@ -23,17 +23,20 @@ class Intro (World):
             gfx.Graphic('intro-{0}.png'.format(img))
         )
 
-        self.evthandler.add((pg.KEYDOWN,
+        for i in xrange(n_pads):
+            pg.joystick.Joystick(i).init()
+        self.evthandler.add((pg.KEYDOWN, pg.JOYBUTTONDOWN,
                              lambda: conf.GAME.switch_world(Level)))
 
 
 class Level (World):
-    def init (self, name='main'):
+    def init (self, name='main', colour='000'):
         self.name = name
         self.players = []
         self.mines = [{'real': [], 'dummy': []} for i in xrange(2)]
         self.rects = []
         gm = self.graphics
+        gm.fade_from(conf.FADE_IN_TIME, colour)
         self.border = Rect((0, 0), gm.orig_size)
 
         self.load_evts()
@@ -115,8 +118,22 @@ class Level (World):
             if ((x - px) ** 2 + (y - py) ** 2) ** .5 <= radius:
                 p.die()
 
-        self.end()
-
     def end (self):
-        self.scheduler.add_timeout(conf.GAME.quit_world, 2)
-        alive = [p.id for p in self.players if not p.dead]
+        alive = [p for p in self.players if not p.dead]
+        if alive:
+            if len(alive) == 1:
+                winner = alive[0]
+            else:
+                winner = [p for p in alive if not p.have_real][0]
+            c = conf.PLAYER['colours'][winner.id]
+        else:
+            c = '000'
+
+        self.scheduler.add_timeout(lambda: self.real_end(c),
+                                   conf.START_END_TIME)
+
+    def real_end (self, c):
+        self.graphics.fade_to(conf.FADE_OUT_TIME, c)
+        self.scheduler.add_timeout(
+            lambda: conf.GAME.switch_world(Level, colour=c), conf.END_TIME
+        )

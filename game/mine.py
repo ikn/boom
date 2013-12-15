@@ -55,8 +55,10 @@ class Mine (Entity):
 
     def explode (self, destroy):
         pos = self.rect.center
-        if not destroy and self.real:
-            self.world.damage(pos, conf.MINE['explosion_radius'])
+        if self.real:
+            if not destroy:
+                self.world.damage(pos, conf.MINE['explosion_radius'])
+            self.world.end()
 
         axis, sgn = self.placed or (None, None)
         mode = 'crumble' if destroy else ('explode' if self.real else 'dud')
