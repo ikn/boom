@@ -44,7 +44,6 @@ class Conf (object):
         }
     }
 
-    # physics/gameplay
     GRAVITY = 1
     FRICTION = (.8, .8)
     AIR_RESISTANCE = (.95, .95)
@@ -74,32 +73,36 @@ class Conf (object):
         },
         'throw_speed': 50,
         'max_throw_speed': .5,
-        'num_lasers': 3
+        'num_lasers': 3,
+        'legs': {
+            'num': 4,
+            'x_offset_base': -8,
+            'x_offset_multiple': 10,
+            'y_offset': 8,
+            'frame_time': .1
+        }
     }
     LASER = {
         'time': .3,
         'width': 4,
         'colour': (180, 20, 20, 255)
     }
-
-    # graphics
-    BG_COLOUR = '050010'
-    RECT_COLOUR = '333'
-    PLAYER_COLOURS = ['d33', '151']
-    MINE_COLOUR = '000'
     LAYERS = {
         'bg': 1,
         'rect': 0,
-        'player': -1,
-        'mine': -2,
-        'deadmine': -3,
-        'laser': -4
+        'player0': -1,
+        'legs0': -2,
+        'player1': -3,
+        'legs1': -4,
+        'mine': -5,
+        'deadmine': -6,
+        'laser': -7
     }
     # offset: of graphics from mine's centre
     DEAD_MINE_GRAPHICS = {
         'dud': {
             'offset': (-22, -59),
             'ncols': 5,
-            'frame_time': .2
+            'frame_time': .1
         }
     }

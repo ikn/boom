@@ -1,3 +1,4 @@
+from math import ceil
 import random
 
 import pygame as pg
@@ -23,10 +24,17 @@ class Level (World):
             self.add_player(i, self.has_real == i)
 
         layers = conf.LAYERS
-        gm.add(gfx.Colour(conf.BG_COLOUR, gm.orig_size, layers['bg']))
+        gm.add(gfx.Graphic('background.png', layer=layers['bg']))
+        g = gfx.Graphic('solid.png')
         for r in conf.LEVELS[name]['rects']:
-            self.rects.append(Rect(r))
-            gm.add(gfx.Colour(conf.RECT_COLOUR, r, layers['rect']))
+            r = Rect(r)
+            self.rects.append(r)
+            w = int(ceil(float(r.w) / g.w))
+            h = int(ceil(float(r.h) / g.h))
+            gm.add(gfx.Tilemap(
+                g.size, (lambda x, y: 0, w, h), {0: g}, r.topleft,
+                layers['rect']
+            ).crop(((0, 0), r.size)))
 
     def load_evts (self):
         eh = self.evthandler

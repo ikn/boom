@@ -60,33 +60,63 @@ class Player (Entity):
         self.lasers_left = conf.PLAYER['num_lasers']
         self.throwing = False
 
-        self.graphics.add(gfx.Colour(
-            conf.PLAYER_COLOURS[n], self.size, conf.LAYERS['player']
-        ), *conf.PLAYER['offset'])
-
     def walk_sound (self):
         self.world.play_snd('walk')
         self.walk_counter.t = gauss(conf.WALK_SOUND_DELAY,
                                     conf.WALK_SOUND_DELAY_VARIANCE)
         self.walk_counter.pause()
+        for l in self.legs:
+            l.pause()
 
     def added (self):
         Entity.added(self)
+
         C = self.world.scheduler.counter
         self.done_jumping = C(conf.PLAYER['jump']['time'])
         self.walk_counter = C(0, True).reset().cb(self.walk_sound)
         self.walk_counter.pause()
         self.walked = False
 
+        self.graphics.add(gfx.Graphic(
+            'player-body-{0}.png'.format(str(self.id)),
+            layer=conf.LAYERS['player' + str(self.id)]
+        ), *conf.PLAYER['offset'])
+
+        legs = conf.PLAYER['legs']
+        x = legs['x_offset_base']
+        dx = legs['x_offset_multiple']
+        y = legs['y_offset']
+        n = legs['num']
+        s = gfx.util.Spritemap('player-legs-{0}.png'.format(str(0)), ## self.id
+                               ncols=n)
+        t = legs['frame_time']
+        self.legs = []
+        for i in xrange(n):
+            frames = range(n)
+            frames = frames[i:] + frames[:i]
+            g = gfx.Animation(
+                s, layer=conf.LAYERS['legs' + str(self.id)],
+                scheduler=self.world.scheduler
+            ).add('run', *frames, frame_time=t).play('run')
+            g.pause()
+            self.legs.append(g)
+            self.graphics.add(g, x, y)
+            x += dx
+
     def update (self):
         Entity.update(self)
+
         if self.throwing:
             self.throw_time += self.world.scheduler.frame
         if self.walked:
             self.walked = False
             self.walk_counter.unpause()
+            for l in self.legs:
+                l.unpause()
         else:
             self.walk_counter.pause()
+            for l in self.legs:
+                l.pause()
 
     def collide (self, axis, sgn, v):
         v = abs(v)
@@ -111,6 +141,10 @@ class Player (Entity):
             self.walked = self.walked or on_ground
             speed = conf.PLAYER['move_ground' if on_ground else 'move_air']
             self.vel[0] += dirn * speed
+            # will need to move a little if the joint becomes off-centre
+            # (currently 13/24)
+            for l in self.legs:
+                l.flip(dirn < 0)
 
     def jump (self, evt):
         if evt[bmode.DOWN]:
@@ -199,4 +233,6 @@ class Player (Entity):
         # TODO: graphics
         self.dead = True
         self.walk_counter.cancel()
+        for l in self.legs:
+            l.stop()
         self.world.rm(self)
