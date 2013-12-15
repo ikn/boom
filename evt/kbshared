@@ -18,10 +18,10 @@ button throw_dummy0 DOWN UP
     kbd RSHIFT
 
 button detonate0 DOWN
-    kbd RETURN
+    kbd BACKSPACE
 
 button destroy0 DOWN
-    kbd BACKSPACE
+    kbd RETURN
 
 axis2 aim1
     left kbd a

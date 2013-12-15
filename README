@@ -1,4 +1,14 @@
-A game made for Ludum Dare 28.
+A game made for Ludum Dare 28, with the theme 'you only have one'.  This is a
+2-player battle with mines, where each player can throw any number of dummy
+mines and only one real one.  However, one player's 'real' mine is a dud, and
+neither player knows which.
+
+A player can detonate all of his mines at any time, and can use lasers 3 times
+to destroy (without detonating) every placed mine.
+
+The game ends once the real mine has been detonated or destroyed, and the
+winner is the player left alive, if any.  If both players are alive, the player
+who had the real mine loses.
 
     DEPENDENCIES
 
@@ -30,9 +40,63 @@ executable.
 
     CONTROLS
 
-F10: minimise
-alt + F4, escape: exit
+Best played with Xbox 360 controllers (others may also work).
+
+minimise: F10
+exit: alt + F4, escape
+
+    with controllers:
+
+move, aim mines: left A-stick
+jump: A
+throw a dummy mine: X
+throw a (potentially) real mine: Y
+use lasers: B
+detonate all owned mines: RT, RB
+
+    with one controller, player 1:
+
+        scheme 1:
+
+move, jump, aim mines: arrow keys
+throw a dummy mine: V
+throw a (potentially) real mine: C
+use lasers: X
+detonate all owned mines: Z
+
+        scheme 2:
+
+move, jump, aim mines: WASD
+throw a dummy mine: right shift
+throw a (potentially) real mine: right ctrl
+use lasers: enter
+detonate all owned mines: backspace
+
+    with no controllers:
+
+        player 1:
+
+move, jump, aim mines: arrow keys
+throw a dummy mine: right shift
+throw a (potentially) real mine: right ctrl
+use lasers: enter
+detonate all owned mines: backspace
+
+        player 2:
+
+move, jump, aim mines: WASD
+throw a dummy mine: space
+throw a (potentially) real mine: left shift
+use lasers: tab
+detonate all owned mines: left ctrl
 
     LICENSING
 
 Source code is available under the GPL version 3 (included).
+
+Sounds are available under the Creative Commons CC0 license (public domain):
+    http://creativecommons.org/publicdomain/zero/1.0/
+
+Images are available under the Creative Commons Attribution-ShareAlike 3.0
+Unported license:
+    http://creativecommons.org/licenses/by-sa/3.0/
