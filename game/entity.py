@@ -5,7 +5,7 @@ from .engine import conf, entity
 class Entity (entity.Entity):
     # subclasses must implement:
     #   size: hitbox size (top-left is at (0, 0) in `graphics`)
-    #   collide(axis, sgn)
+    #   collide(axis, sgn, vel)
     def __init__ (self, vel, *args, **kwargs):
         entity.Entity.__init__(self, *args, **kwargs)
         self.vel = list(vel) or [0, 0]
@@ -46,7 +46,7 @@ class Entity (entity.Entity):
                 if (not self.world.border.contains(temp_pr) or
                     temp_pr.collidelist(rects) != -1):
                     # collision
-                    self.collide(i, sgn)
+                    self.collide(i, sgn, v[i])
                     on_sfc[i] = sgn
                     dp[i] -= sgn
                     v[i] = 0

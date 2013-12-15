@@ -1,8 +1,32 @@
+from .engine.util import dd
+
+
 class Conf (object):
     IDENT = 'game'
     WINDOW_TITLE = ''
     #WINDOW_ICON = 'icon.png'
     RES_W = (960, 540)
+
+    SOUND_VOLUME = dd(1)
+    SOUND_VOLUMES = dd(1, {
+        'collide': 1,
+        'jump': .6,
+        'walk': .5,
+        'throw': .6,
+        'place': .4,
+        'explode': .8,
+        'dud': .5,
+        'laser': .4,
+        'crumble': .4
+    })
+    MAX_SOUNDS = dd(5)
+    SOUND_ALIASES = {
+        'jump': 'clang',
+        'collide': 'clang',
+        'walk': 'miniclang'
+    }
+    WALK_SOUND_DELAY = .2
+    WALK_SOUND_DELAY_VARIANCE = .02
 
     PAD_DEADZONE = .2
 
@@ -37,7 +61,7 @@ class Conf (object):
         'num_lasers': 3
     }
     LASER = {
-        'time': .2,
+        'time': .3,
         'width': 3,
         'colour': (255, 0, 0, 255)
     }
@@ -50,7 +74,7 @@ class Conf (object):
     LAYERS = {
         'bg': 1,
         'rect': 0,
-        'laser': -1,
-        'player': -2,
-        'mine': -3
+        'player': -1,
+        'mine': -2,
+        'laser': -3
     }

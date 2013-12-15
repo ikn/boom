@@ -1,4 +1,5 @@
 from math import atan2, degrees
+from random import gauss
 
 from pygame import Rect
 from .engine import conf, gfx, util, entity
@@ -16,6 +17,7 @@ class Lasers (entity.Entity):
 
     def added (self):
         self.world.scheduler.add_timeout(self.finished, conf.LASER['time'])
+        self.world.play_snd('laser')
 
     def update (self):
         w = conf.LASER['width']
@@ -62,18 +64,34 @@ class Player (Entity):
             conf.PLAYER_COLOURS[n], self.size, conf.LAYERS['player']
         ), *conf.PLAYER['offset'])
 
+    def walk_sound (self):
+        self.world.play_snd('walk')
+        self.walk_counter.t = gauss(conf.WALK_SOUND_DELAY,
+                                    conf.WALK_SOUND_DELAY_VARIANCE)
+        self.walk_counter.pause()
+
     def added (self):
         Entity.added(self)
-        self.done_jumping = \
-            self.world.scheduler.counter(conf.PLAYER['jump_time'])
+        C = self.world.scheduler.counter
+        self.done_jumping = C(conf.PLAYER['jump_time'])
+        self.walk_counter = C(0, True).reset().cb(self.walk_sound)
+        self.walk_counter.pause()
+        self.walked = False
 
     def update (self):
         Entity.update(self)
         if self.throwing:
             self.throw_time += self.world.scheduler.frame
+        if self.walked:
+            self.walked = False
+            self.walk_counter.unpause()
+        else:
+            self.walk_counter.pause()
 
-    def collide (self, axis, sgn):
-        pass
+    def collide (self, axis, sgn, v):
+        v = abs(v)
+        if v > 5:
+            self.world.play_snd('collide', min(v / 20., 1))
 
     def action (self, action):
         action = util.wrap_fn(getattr(self, action))
@@ -88,11 +106,15 @@ class Player (Entity):
         self.dirn = pos
 
     def move (self, dirn):
-        speed = conf.PLAYER['move_ground' if self.on_sfc[1] else 'move_air']
-        self.vel[0] += dirn * speed
+        if dirn:
+            on_ground = self.on_sfc[1] == 1
+            self.walked = self.walked or on_ground
+            speed = conf.PLAYER['move_ground' if on_ground else 'move_air']
+            self.vel[0] += dirn * speed
 
     def jump (self, evt):
-        if evt[bmode.DOWN] and self.on_sfc[1]:
+        if evt[bmode.DOWN] and self.on_sfc[1] == 1:
+            self.world.play_snd('jump')
             self.vel[1] -= conf.PLAYER['jump_initial']
             self.done_jumping.reset()
         elif evt[bmode.HELD] and not self.done_jumping:
@@ -121,6 +143,8 @@ class Player (Entity):
                 break
 
     def release (self, real, force):
+        self.world.play_snd('throw')
+
         vel = list(self.vel)
         dx, dy = dirn = self.dirn
         adirn = (dx * dx + dy * dy) ** .5
@@ -167,4 +191,5 @@ class Player (Entity):
     def die (self):
         # TODO: graphics
         self.dead = True
+        self.walk_counter.cancel()
         self.world.rm(self)

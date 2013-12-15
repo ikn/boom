@@ -79,4 +79,4 @@ class Level (World):
         cs.append((0, 0, 0))
         c = [sum(l[:3]) for l in zip(*cs)]
         self.graphics.fade_to(2, c)
-        self.scheduler.add_timeout(conf.GAME.quit_world, 2)
+        #self.scheduler.add_timeout(conf.GAME.quit_world, 2)

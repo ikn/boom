@@ -21,9 +21,10 @@ class Mine (Entity):
             conf.MINE_COLOUR, self.size, conf.LAYERS['mine']
         ), *conf.MINE['offset'])
 
-    def collide (self, axis, sgn):
+    def collide (self, axis, sgn, v):
         # TODO: fix angle/pos
         self.placed = (axis, sgn)
+        self.world.play_snd('place')
 
     def update (self):
         if self.placed is None:
@@ -36,6 +37,7 @@ class Mine (Entity):
 
         axis, sgn = self.placed or (None, None)
         mode = 'crumble' if destroy else ('explode' if self.real else 'dud')
+        self.world.play_snd(mode)
         self.world.add(DeadMine(mode, self.vel, axis, sgn, *pos))
         self.world.rm(self)
 
