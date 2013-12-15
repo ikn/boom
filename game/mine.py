@@ -1,9 +1,11 @@
 from math import pi
+from random import gauss
 
 import pygame as pg
 from pygame import Rect
 from .engine import conf, gfx, entity
 from .engine.evt import bmode
+from .engine.util import randsgn
 
 from .entity import Entity
 
@@ -30,11 +32,18 @@ class Mine (Entity):
         ).add('run', frame_time=conf.MINE['animation_frame_time']).play('run')
         self.graphics.add(g, dx, dy)
         g.rot_origin = Rect((-dx, -dy), self.size).center
-        g.rotate_fn = lambda sfc, angle: \
-            pg.transform.rotate(sfc, angle * 180 / pi)
+
+        r_speed = gauss(conf.MINE['rotate_speed'],
+                        conf.MINE['rotate_speed_variance']) * randsgn()
+        self.rotating = self.world.scheduler.interp(
+            lambda t: r_speed * t, g.rotate
+        )
 
     def collide (self, axis, sgn, v):
+        self.world.scheduler.rm_timeout(self.rotating)
         for g in self.graphics:
+            g.rotate_fn = lambda sfc, angle: \
+                pg.transform.rotate(sfc, angle * 180 / pi)
             g.angle = (pi / 2) * (2 - (axis + sgn))
         self.placed = (axis, sgn)
         self.world.play_snd('place')

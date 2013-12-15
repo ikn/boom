@@ -36,7 +36,7 @@ class Conf (object):
         'main': {
             'rects': [
                 (0, 450, 960, 90),
-                (750, 0, 50, 400)
+                (800, 0, 50, 400)
             ]
         }
     }
@@ -50,7 +50,9 @@ class Conf (object):
         'offset': (-13, -4), # of graphics from hitbox
         'size': (8, 8),
         'explosion_radius': 125,
-        'animation_frame_time': .4
+        'animation_frame_time': .4,
+        'rotate_speed': 4, # rad/s
+        'rotate_speed_variance': 2
     }
     PLAYER = {
         'offset': (0, 0), # of graphics from hitbox
