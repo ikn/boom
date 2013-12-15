@@ -1,38 +1,27 @@
-button quit DOWN
-    kbd ESCAPE
-
 axis2 aim0
     left kbd LEFT
     up kbd UP
     right kbd RIGHT
     down kbd DOWN
-    left right pad <x> axis 0
-    up down pad <x> axis 1
 
 axis move0
     neg kbd LEFT
     pos kbd RIGHT
-    neg pos pad <x> axis 0
 
 button jump0 DOWN HELD
     kbd UP
-    pad <x> button 0
 
 button throw_real0 DOWN UP
     kbd RCTRL
-    pad <x> button 3
 
 button throw_dummy0 DOWN UP
     kbd RSHIFT
-    pad <x> button 2
 
 button detonate0 DOWN
     kbd RETURN
-    pad <x> axis:1 5 .6 .4
 
 button destroy0 DOWN
     kbd BACKSPACE
-    pad <x> button 1
 
 axis2 aim1
     left kbd a

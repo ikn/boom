@@ -1,0 +1,45 @@
+axis2 aim0
+    left kbd a
+    left kbd LEFT
+    up kbd w
+    up kbd COMMA
+    up kbd UP
+    right kbd d
+    right kbd e
+    right kbd RIGHT
+    down kbd s
+    down kbd o
+    down kbd DOWN
+
+axis move0
+    neg kbd a
+    neg kbd LEFT
+    pos kbd d
+    pos kbd e
+    pos kbd RIGHT
+
+button jump0 DOWN HELD
+    kbd w
+    kbd COMMA
+    kbd SPACE
+    kbd UP
+
+button throw_real0 DOWN UP
+    kbd RCTRL
+    kbd c
+    kbd j
+
+button throw_dummy0 DOWN UP
+    kbd RSHIFT
+    kbd v
+    kbd k
+
+button detonate0 DOWN
+    kbd BACKSPACE
+    kbd z
+    kbd SEMICOLON
+
+button destroy0 DOWN
+    kbd RETURN
+    kbd x
+    kbd q

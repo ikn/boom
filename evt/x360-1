@@ -1,0 +1,22 @@
+axis2 aim1
+    left right pad <y> axis 0
+    up down pad <y> axis 1
+
+axis move1
+    neg pos pad <y> axis 0
+
+button jump1 DOWN HELD
+    pad <y> button 0
+
+button throw_real1 DOWN UP
+    pad <y> button 3
+
+button throw_dummy1 DOWN UP
+    pad <y> button 2
+
+button detonate1 DOWN
+    pad <y> axis:1 5 .6 .4
+    pad <y> button 5
+
+button destroy1 DOWN
+    pad <y> button 1

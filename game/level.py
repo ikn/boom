@@ -9,21 +9,17 @@ from .player import Player, Lasers
 
 
 class Level (World):
-    def init (self, name='main', num_players=2):
+    def init (self, name='main'):
         self.name = name
         self.players = []
-        self.mines = [{'real': [], 'dummy': []} for i in xrange(num_players)]
+        self.mines = [{'real': [], 'dummy': []} for i in xrange(2)]
         self.rects = []
         gm = self.graphics
         self.border = Rect((0, 0), gm.orig_size)
 
-        eh = self.evthandler
-        eh.load('level')
-        eh.assign_devices(x=0, y=1)
-        eh.set_deadzones(('pad', conf.PAD_DEADZONE))
-        eh['quit'].cb(lambda: conf.GAME.quit_world())
-        self.has_real = random.randrange(num_players)
-        for i in xrange(num_players):
+        self.load_evts()
+        self.has_real = random.randrange(2)
+        for i in xrange(2):
             self.add_player(i, self.has_real == i)
 
         layers = conf.LAYERS
@@ -31,6 +27,25 @@ class Level (World):
         for r in conf.LEVELS[name]['rects']:
             self.rects.append(Rect(r))
             gm.add(gfx.Colour(conf.RECT_COLOUR, r, layers['rect']))
+
+    def load_evts (self):
+        eh = self.evthandler
+        eh.load('ui')
+        eh['quit'].cb(lambda: conf.GAME.quit_world())
+
+        n_pads = pg.joystick.get_count()
+        if n_pads == 0:
+            eh.load('kbshared')
+        else:
+            if n_pads == 1:
+                eh.load('kb')
+                eh.load('x360-1')
+                eh.assign_devices(y=0)
+            else:
+                eh.load('x360-0')
+                eh.load('x360-1')
+                eh.assign_devices(x=0, y=1)
+            eh.set_deadzones(('pad', conf.PAD_DEADZONE))
 
     def add_player (self, n, has_real):
         x, y = (50 * n, 50)
