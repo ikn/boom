@@ -1,10 +1,13 @@
+import os
+
+from .engine import conf
 from .engine.util import dd
 
 
 class Conf (object):
     IDENT = 'game'
     WINDOW_TITLE = ''
-    #WINDOW_ICON = 'icon.png'
+    WINDOW_ICON = os.path.join(conf.IMG_DIR, 'icon.png')
     RES_W = (960, 540)
 
     SOUND_VOLUME = dd(1)
