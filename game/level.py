@@ -43,7 +43,8 @@ class Level (World):
         self.load_evts()
         self.has_real = random.randrange(2)
         for i in xrange(2):
-            self.add_player(i, self.has_real == i)
+            self.add_player(i, self.has_real == i,
+                            conf.LEVELS[name]['spawn'][i])
 
         layers = conf.LAYERS
         gm.add(gfx.Graphic('background.png', layer=layers['bg']))
@@ -77,9 +78,8 @@ class Level (World):
                 eh.assign_devices(x=0, y=1)
             eh.set_deadzones(('pad', conf.PAD_DEADZONE))
 
-    def add_player (self, n, has_real):
-        x, y = (50 * n, 50)
-        p = Player(n, has_real, x, y)
+    def add_player (self, n, has_real, pos):
+        p = Player(n, has_real, *pos)
         self.players.append(p)
         self.add(p)
 
