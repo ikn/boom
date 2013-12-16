@@ -63,7 +63,7 @@ button _game_fullscreen DOWN
     MINE = {
         'offset': (-13, -4), # of graphics from hitbox
         'size': (8, 8),
-        'explosion_radius': 125,
+        'explosion_radius': 150,
         'animation_frame_time': .4,
         'rotate_speed': 4, # rad/s
         'rotate_speed_variance': 2
@@ -108,7 +108,8 @@ button _game_fullscreen DOWN
         'legs0': -4,
         'mine': -5,
         'deadmine': -6,
-        'laser': -7
+        'laser': -7,
+        'particles': -8
     }
     # offset: of graphics from mine's centre
     DEAD_MINE_GRAPHICS = {
@@ -118,6 +119,67 @@ button _game_fullscreen DOWN
             'frame_time': .1
         }
     }
+
+    PARTICLES = {
+        # colour
+        # amount: total area
+        # size <rand>
+        # speed <rand>: per frame
+        # life <rand>: frames
+        'explode': {
+            'size': {'mean': 2, 'dev': 1},
+            'speed': 3,
+            'life': {'mean': 60, 'dev': 20},
+            'colours': [
+                {'colour': 'c22', 'amount': 1700}, # red
+                {'colour': 'd51', 'amount': 1700}, # orange
+                {'colour': 'fb2', 'amount': 1000}, # yellow
+                {'colour': 'a68e69', 'amount': 200 }, # mine colour
+                {'colour': '000', 'amount': 200}
+            ]
+        },
+
+        'crumble': {
+            'size': {'mean': 1.5, 'dev': .5},
+            'speed': .5,
+            'life': {'mean': 30, 'dev': 10},
+            'colours': [
+                {'colour': '620d0d', 'amount': 20}, # main
+                {'colour': '816e51', 'amount': 5}, # shadow
+                {'colour': 'ccae81', 'amount': 5}, # highlight
+                {'colour': 'a68e69', 'amount': 10}, # red
+                {'colour': '1c1812', 'amount': 80}, # charred
+                {'colour': '1c1812', 'amount': 30} # charred
+            ]
+        },
+
+        'die0': {
+            'size': {'mean': 3, 'dev': 2},
+            'speed': 2,
+            'life': {'mean': 40, 'dev': 15},
+            'colours': [
+                {'colour': '312a19', 'amount': 500}, # dark
+                {'colour': '5c4a2c', 'amount': 500}, # ...
+                {'colour': '695a31', 'amount': 500}, # ...
+                {'colour': '9a8758', 'amount': 500}, # light
+                {'colour': '000', 'amount': 500}
+            ]
+        },
+
+        'die1': {
+            'size': {'mean': 3, 'dev': 2},
+            'speed': 2,
+            'life': {'mean': 40, 'dev': 15},
+            'colours': [
+                {'colour': '182e2e', 'amount': 500}, # dark
+                {'colour': '2a5853', 'amount': 500}, # ...
+                {'colour': '2e6463', 'amount': 500}, # ...
+                {'colour': '539390', 'amount': 500}, # light
+                {'colour': '000', 'amount': 500}
+            ]
+        }
+    }
+    PARTICLE_DAMPING = .95
 
     START_END_TIME = .5
     FADE_IN_TIME = 1

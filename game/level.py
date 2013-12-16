@@ -7,6 +7,7 @@ from .engine import conf, gfx
 from .engine.game import World
 
 from .player import Player, Lasers
+from .util import Particles
 
 
 class Intro (World):
@@ -117,6 +118,11 @@ class Level (World):
             px, py = p.rect.center
             if ((x - px) ** 2 + (y - py) ** 2) ** .5 <= radius:
                 p.die()
+
+    def particles (self, name, pos):
+        self.graphics.add(Particles(
+            self.scheduler, conf.PARTICLES[name], pos, conf.LAYERS['particles']
+        ))
 
     def end (self):
         alive = [p for p in self.players if not p.dead]

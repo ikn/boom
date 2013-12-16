@@ -230,9 +230,9 @@ class Player (Entity):
                 self.lasers_left -= 1
 
     def die (self):
-        # TODO: graphics
         self.dead = True
         self.walk_counter.cancel()
         for l in self.legs:
             l.stop()
+        self.world.particles('die' + str(self.id), self.rect.center)
         self.world.rm(self)

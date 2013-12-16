@@ -57,13 +57,17 @@ class Mine (Entity):
         pos = self.rect.center
         if self.real:
             if not destroy:
+                self.world.particles('explode', pos)
                 self.world.damage(pos, conf.MINE['explosion_radius'])
             self.world.end()
 
         axis, sgn = self.placed or (None, None)
         mode = 'crumble' if destroy else ('explode' if self.real else 'dud')
         self.world.play_snd(mode)
-        self.world.add(DeadMine(mode, pos, self.vel, axis, sgn))
+        if mode == 'crumble':
+            self.world.particles('crumble', pos)
+        else:
+            self.world.add(DeadMine(mode, pos, self.vel, axis, sgn))
         self.world.rm(self)
 
 
@@ -76,14 +80,6 @@ class DeadMine (entity.Entity):
         self.vel = list(vel)
 
     def added (self):
-        # TODO: use animation callback (has one?)
-        self.world.scheduler.counter(1).reset().cb(self.finished)
-
-        g = gfx.Animation(
-            gfx.util.Spritemap('mine.png', nrows=2), layer=conf.LAYERS['mine'],
-            scheduler=self.world.scheduler
-        ).add('run', frame_time=conf.MINE['animation_frame_time']).play('run')
-
         settings = conf.DEAD_MINE_GRAPHICS.get(self.mode)
         if settings is not None:
             g = gfx.Animation(
@@ -91,7 +87,9 @@ class DeadMine (entity.Entity):
                                    ncols=settings['ncols']),
                 self.graphics.pos, conf.LAYERS['deadmine'],
                 self.world.scheduler
-            ).add('run', frame_time=settings['frame_time']).play('run', False)
+            ) \
+                .add('run', frame_time=settings['frame_time']) \
+                .play('run', False, cb=self.finished)
             self.graphics.add(g, *settings['offset'])
 
     def update (self):
