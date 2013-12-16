@@ -1,7 +1,7 @@
-A game made for Ludum Dare 28, with the theme 'you only have one'.  This is a
-2-player battle with mines, where each player can throw any number of dummy
-mines and only one real one.  However, one player's 'real' mine is a dud, and
-neither player knows which.
+boom (release 1): a game made for Ludum Dare 28, with the theme 'you only have
+one'.  This is a 2-player battle with mines, where each player can throw any
+number of dummy mines and only one real one.  However, one player's 'real' mine
+is a dud, and neither player knows which.
 
 A player can detonate all of his mines at any time, and can use lasers 3 times
 to destroy (without detonating) every placed mine.
@@ -12,7 +12,7 @@ who had the real mine loses.
 
     DEPENDENCIES
 
-Python (2.6 or later 2.x, 3.2 or later 3.x)
+Python (2.6 or later 2.x)
 Pygame (1.8.1 or later, probably; tested with 1.9.1)
 
     RUNNING
@@ -27,9 +27,6 @@ available on the system.  Just run
 On Windows, this requires the command-line compiler ('cl') to be on your path,
 and assumes that SDL.h is in the directory 'sdl_include' above this directory
 (horrible, I know).
-
-The makefile supports a 'PYTHON_VERSION' argument which can be 2 (default) or
-3, which determines which version to build for.
 
 Now, on systems with a sh-compatible shell, do
 

@@ -5,8 +5,8 @@ from .engine.util import dd
 
 
 class Conf (object):
-    IDENT = 'game'
-    WINDOW_TITLE = ''
+    IDENT = 'boom'
+    WINDOW_TITLE = 'boom'
     WINDOW_ICON = os.path.join(conf.IMG_DIR, 'icon.png')
     RES_W = (960, 540)
 
