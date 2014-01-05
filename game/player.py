@@ -11,7 +11,8 @@ from .mine import Mine
 
 class Lasers (entity.Entity):
     def __init__ (self, player, mines):
-        entity.Entity.__init__(self, *player.rect.center)
+        entity.Entity.__init__(self)
+        self.graphics.pos = player.rect.center
         self.player = player
         self.mines = mines
 
@@ -48,9 +49,9 @@ class Lasers (entity.Entity):
 
 
 class Player (Entity):
-    def __init__ (self, n, have_real, *args, **kwargs):
-        Entity.__init__(self, (0, 0), *args, **kwargs)
-
+    def __init__ (self, n, have_real, pos):
+        Entity.__init__(self, (0, 0))
+        self.graphics.pos = pos
         self.id = n
         self.size = conf.PLAYER['size']
         self.have_real = have_real

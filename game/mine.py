@@ -12,12 +12,11 @@ from .entity import Entity
 
 class Mine (Entity):
     def __init__ (self, real, within, player, vel, dirn, pos):
+        Entity.__init__(self, vel)
         self.size = conf.MINE['size']
         r = Rect((0, 0), self.size)
         r.center = pos
-
-        Entity.__init__(self, vel, *r.clamp(within).topleft)
-
+        self.graphics.pos = r.clamp(within).topleft
         self.real = real
         self.player = player
         self.placed = None
@@ -74,8 +73,8 @@ class Mine (Entity):
 class DeadMine (entity.Entity):
     def __init__ (self, mode, pos, vel, axis, sgn):
         # mode: explode, dud, crumble
-        entity.Entity.__init__(self, *pos)
-
+        entity.Entity.__init__(self)
+        self.graphics.pos = pos
         self.mode = mode
         self.vel = list(vel)
 

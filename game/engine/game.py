@@ -45,7 +45,7 @@ class _ClassProperty (property):
 class World (object):
     """A world base class; to be subclassed.
 
-World(scheduler, evthandler)
+World(scheduler, evthandler, resources)
 
 :arg scheduler: the :class:`sched.Scheduler <engine.sched.Scheduler>` instance
                 this world should use for timing.
@@ -121,7 +121,7 @@ speed, it may mean the draw rate is dropping to :data:`conf.MIN_FPS`.)
 """
         return 1 / self._avg_draw_time
 
-    def init (self):
+    def init (self, *args, **kwargs):
         """Called when this first becomes the active world (before
 :meth:`select`).
 
@@ -163,7 +163,7 @@ This receives the extra arguments passed in constructing the world through the
 
     def _update (self):
         """Called by the game to update."""
-        for e in list(self.entities):
+        for e in self.entities:
             e.update()
         self.update()
 
@@ -239,15 +239,12 @@ Each entity passed may also be a sequence of entities to add.
             if hasattr(e, '__len__') and hasattr(e, '__getitem__'):
                 entities.extend(e)
             else:
-                all_entities.add(e)
                 if e.world is not None:
                     e.world.rm(e)
-                elif e.graphics.manager is not None:
-                    # has no world, so manager was explicitly set, so don't
-                    # change it
-                    pass
-                else:
+                if e.graphics.manager is None:
                     e.graphics.manager = self.graphics
+                # else manager was explicitly set, so don't change it
+                all_entities.add(e)
                 e.world = self
                 e.added()
 

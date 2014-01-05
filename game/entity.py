@@ -6,8 +6,8 @@ class Entity (entity.Entity):
     # subclasses must implement:
     #   size: hitbox size (top-left is at (0, 0) in `graphics`)
     #   collide(axis, sgn, vel)
-    def __init__ (self, vel, *args, **kwargs):
-        entity.Entity.__init__(self, *args, **kwargs)
+    def __init__ (self, vel):
+        entity.Entity.__init__(self)
         self.vel = list(vel) or [0, 0]
 
     def added (self):

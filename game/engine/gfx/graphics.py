@@ -10,8 +10,10 @@ TODO:
         - note that any graphics passed have their managers removed (and so mustn't be locked)
     - should provide tile setters/getters
     - .update_from from_disk=True should call Graphic.reload() on graphics
+    - only prerender tiles as requested
  - tiled graphic
     - graphic form is like Tilemap's tile_graphic
+    - takes multiple rects to cover all of them with edges matching up
  - particle system
  - *Grid take (tiled graphic)/(args thereto) instead of just colour for bg
 
@@ -259,7 +261,7 @@ Note that when an animation is playing and the image changes,
 
 For example, to play the frames in a spritemap consisting of a single row::
 
-    Animation(Spritemap('map.png', 32)).add('run', frame_time=.1).play('run')
+    Animation(Spritemap('map.png', 4)).add('run', frame_time=.1).play('run')
 
 """
     def __init__ (self, imgs, pos=(0, 0), layer=0, scheduler=None,
@@ -543,14 +545,24 @@ If a sequence is already being played, that sequence is canceled.
         return self
 
     def pause (self):
-        """Pause the currently running sequence, if any."""
+        """Pause the currently running sequence, if any.
+
+pause() -> self
+
+"""
         if self.playing is not None:
             self._get_sched().pause_timeout(self._timer_id)
+        return self
 
     def unpause (self):
-        """Unpause the currently running sequence, if paused."""
+        """Unpause the currently running sequence, if paused.
+
+unpause() -> self
+
+"""
         if self.playing is not None:
             self._get_sched().unpause_timeout(self._timer_id)
+        return self
 
     def stop (self, n_queued=0):
         """Stop the currently running sequence, if any.

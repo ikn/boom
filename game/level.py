@@ -84,7 +84,7 @@ class Level (World):
             eh.set_deadzones(('pad', conf.PAD_DEADZONE))
 
     def add_player (self, n, has_real, pos):
-        p = Player(n, has_real, *pos)
+        p = Player(n, has_real, pos)
         self.players.append(p)
         self.add(p)
 
