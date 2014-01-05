@@ -164,7 +164,7 @@ class Player (Entity):
         elif evt[bmode.HELD] and not self.done_jumping:
             self.vel[1] -= conf.PLAYER['jump']['continue']
 
-    def throw (self, real, evt):
+    def throw_mine (self, real, evt):
         down = evt[bmode.DOWN]
         up = evt[bmode.UP]
         while True:
@@ -215,12 +215,12 @@ class Player (Entity):
 
     def throw_real (self, evt):
         if not self.thrown_real:
-            for x in self.throw(self.have_real, evt):
+            for x in self.throw_mine(self.have_real, evt):
                 self.thrown_real = True
                 break
 
     def throw_dummy (self, evt):
-        list(self.throw(False, evt))
+        list(self.throw_mine(False, evt))
 
     def detonate (self):
         self.world.detonate_mines(self, False)
