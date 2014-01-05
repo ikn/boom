@@ -8,7 +8,7 @@ class Conf (object):
     IDENT = 'boom'
     WINDOW_TITLE = 'boom'
     WINDOW_ICON = os.path.join(conf.IMG_DIR, 'icon.png')
-    RES_W = (960, 540)
+    RES_W = (1200, 600)
 
     # remove fullscreen keys since they disable KEYDOWN on enter without alt
     GAME_EVENTS = '''
@@ -49,20 +49,11 @@ button _game_fullscreen DOWN
     LEVELS = {
         'main': {
             'spawn': [
-                (20, 340),
-                (800, 360)
+                (40, 400),
+                (1140, 400)
             ],
             'rects': [
-                (0, 480, 960, 60), # ground
-                (0, 380, 80, 100), # left bottom
-                (220, 380, 150, 40), # centre bottom
-                (370, 330, 200, 150),
-                (570, 450, 170, 30), # right bottom
-                (740, 400, 130, 80),
-                (130, 230, 350, 40), # left top
-                (130, 80, 40, 150),
-                (440, 190, 40, 40),
-                (620, 130, 340, 100), # right top
+                (0, 440, 1200, 160)
             ]
         }
     }
@@ -132,6 +123,7 @@ button _game_fullscreen DOWN
         }
     }
 
+    INTRO_FRAME_WIDTH = (80, 30)
     PARTICLES = {
         # colour
         # amount: total area

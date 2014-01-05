@@ -1,9 +1,17 @@
-from math import pi, cos, sin
+from math import pi, cos, sin, ceil
 import random
 
 from .engine import conf
-from .engine.gfx import Graphic
+from .engine.gfx import Graphic, Tilemap
 from .engine.util import randsgn, ir, blank_sfc, normalise_colour
+
+
+def tile_graphic (g, r, layer):
+    w = int(ceil(float(r.w) / g.w))
+    h = int(ceil(float(r.h) / g.h))
+    return Tilemap(
+        g.size, (lambda x, y: 0, w, h), {0: g}, r.topleft, layer
+    ).crop(((0, 0), r.size))
 
 
 def rand (arg):

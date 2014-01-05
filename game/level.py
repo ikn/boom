@@ -1,13 +1,13 @@
-from math import ceil
 import random
 
 import pygame as pg
 from pygame import Rect
-from .engine import conf, gfx
+from .engine import conf
+from .engine.gfx import Graphic
 from .engine.game import World
 
 from .player import Player, Lasers
-from .util import Particles
+from .util import Particles, tile_graphic
 
 
 class Intro (World):
@@ -19,10 +19,18 @@ class Intro (World):
             img = '1pad'
         else:
             img = '2pads'
+
+        text = Graphic('intro-{0}.png'.format(img))
+        gm_r = Rect((0, 0), self.graphics.size)
+        frame = gm_r.inflate(*(-2 * w for w in conf.INTRO_FRAME_WIDTH))
         self.graphics.add(
-            gfx.Colour('fff', self.graphics.orig_size, layer=1),
-            gfx.Graphic('intro-{0}.png'.format(img))
+            tile_graphic(Graphic('solid.png'), gm_r, 2),
+            Graphic('background.png', layer=1)
+                .resize(*self.graphics.orig_size)
+                .transform('crop', frame, after='resize'),
+            text
         )
+        text.align()
 
         for i in xrange(n_pads):
             pg.joystick.Joystick(i).init()
@@ -47,17 +55,14 @@ class Level (World):
                             conf.LEVELS[name]['spawn'][i])
 
         layers = conf.LAYERS
-        gm.add(gfx.Graphic('background.png', layer=layers['bg']))
-        g = gfx.Graphic('solid.png')
+        gm.add(
+            Graphic('background.png', layer=layers['bg']).resize(*gm.orig_size)
+        )
+        g = Graphic('solid.png')
         for r in conf.LEVELS[name]['rects']:
             r = Rect(r)
             self.rects.append(r)
-            w = int(ceil(float(r.w) / g.w))
-            h = int(ceil(float(r.h) / g.h))
-            gm.add(gfx.Tilemap(
-                g.size, (lambda x, y: 0, w, h), {0: g}, r.topleft,
-                layers['rect']
-            ).crop(((0, 0), r.size)))
+            gm.add(tile_graphic(g, r, layers['rect']))
 
     def load_evts (self):
         eh = self.evthandler
