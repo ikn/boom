@@ -19,12 +19,15 @@ class Entity (entity.Entity):
         # hitbox
         return Rect(self.graphics.pos, self.size)
 
+    def collides (self, rect):
+        return (not self.world.border.contains(rect) or
+                rect.collidelist(self.world.rects) != -1)
+
     def update (self):
         v = self.vel
         rem = self.rem
         g = self.graphics
         on_sfc = self.on_sfc
-        rects = self.world.rects
 
         v[1] += conf.GRAVITY
         pr = self.rect
@@ -38,18 +41,23 @@ class Entity (entity.Entity):
             rem[i] = dxf - dx
             sgn = 1 if dx > 0 else -1
 
-            if dx and sgn != on_sfc[i]:
-                on_sfc[i] = 0
             for j in xrange(sgn * dx):
                 dp[i] += sgn
-                temp_pr = pr.move(dp)
-                if (not self.world.border.contains(temp_pr) or
-                    temp_pr.collidelist(rects) != -1):
+                if self.collides(pr.move(dp)):
                     # collision
                     self.collide(i, sgn, v[i])
-                    on_sfc[i] = sgn
                     dp[i] -= sgn
                     v[i] = 0
                     break
 
         g.move_by(*dp)
+
+        on_sfc[0] = on_sfc[1] = 0
+        pr = self.rect
+        for i in xrange(4):
+            dp = [0, 0]
+            axis = i % 2
+            sgn = 1 if i >= 2 else -1
+            dp[axis] += sgn
+            if self.collides(pr.move(dp)):
+                on_sfc[axis] = sgn
