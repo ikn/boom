@@ -33,8 +33,13 @@ class Entity (entity.Entity):
         pr = self.rect
         dp = [0, 0]
         for i in (0, 1):
-            # friction: don't apply upwards, for easier jumping up ledges
-            if on_sfc[not i] and (i == 0 or v[i] > 0):
+            # friction
+            # don't apply upwards, for easier jumping up ledges
+            # don't apply on ceilings
+            if on_sfc[not i] and (
+                (i == 0 and on_sfc[not i] == 1) or
+                (i == 1 and v[i] > 0)
+            ):
                 v[i] *= conf.FRICTION[i]
             v[i] *= conf.AIR_RESISTANCE[i]
             dxf = v[i] + rem[i]
