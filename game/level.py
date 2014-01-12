@@ -39,27 +39,26 @@ class Intro (World):
 
 
 class Level (World):
-    def init (self, name='main', colour='000'):
-        self.name = name
+    def init (self, colour='000'):
         self.players = []
         self.mines = [{'real': [], 'dummy': []} for i in xrange(2)]
         self.rects = []
         gm = self.graphics
         gm.fade_from(conf.FADE_IN_TIME, colour)
-        self.border = Rect((0, 0), gm.orig_size)
+        self.border = Rect((0, 0), gm.orig_size).inflate(0, 1000).move(0, -500)
+        lvl = random.choice(conf.LEVELS)
 
         self.load_evts()
         self.has_real = random.randrange(2)
         for i in xrange(2):
-            self.add_player(i, self.has_real == i,
-                            conf.LEVELS[name]['spawn'][i])
+            self.add_player(i, self.has_real == i, lvl['spawn'][i])
 
         layers = conf.LAYERS
         gm.add(
             Graphic('background.png', layer=layers['bg']).resize(*gm.orig_size)
         )
         g = Graphic('solid.png')
-        for r in conf.LEVELS[name]['rects']:
+        for r in lvl['rects']:
             r = Rect(r)
             self.rects.append(r)
             gm.add(tile_graphic(g, r, layers['rect']))

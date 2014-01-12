@@ -46,8 +46,8 @@ button _game_fullscreen DOWN
 
     PAD_DEADZONE = .2
 
-    LEVELS = {
-        'main': {
+    LEVELS = [
+        {
             'spawn': [
                 (40, 400),
                 (1140, 400)
@@ -56,7 +56,7 @@ button _game_fullscreen DOWN
                 (0, 440, 1200, 160)
             ]
         }
-    }
+    ]
 
     GRAVITY = 1
     FRICTION = (.8, .8)
