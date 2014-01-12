@@ -57,12 +57,30 @@ def rect_lines (r):
         a = b
 
 
-def line_intersects_rect (a, b, r):
+def line_intersects_rect (a, b, r, every=False):
+    if every:
+        pts = []
     for x, y in rect_lines(r):
         i = lines_intersect(a, b, x, y)
         if i:
-            return i
-    return False
+            if every:
+                pts.append(i)
+            else:
+                return i
+    return pts if every else False
+
+
+def line_intersects_rects (a, b, rects, every=False):
+    if every:
+        pts = []
+    for r in rects:
+        i = line_intersects_rect(a, b, r, every)
+        if i:
+            if every:
+                pts += i
+            else:
+                return i
+    return pts if every else False
 
 
 def rand (arg):

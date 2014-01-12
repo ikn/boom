@@ -7,7 +7,7 @@ from .engine.gfx import Graphic, Colour
 from .engine.game import World
 
 from .player import Player, Lasers
-from .util import Particles, tile_graphic, line_intersects_rect, pt_dist
+from .util import Particles, tile_graphic, line_intersects_rects, pt_dist
 
 
 class Intro (World):
@@ -122,10 +122,9 @@ class Level (World):
             dist = pt_dist(pos, ppos)
             if dist > radius:
                 continue
-            for r in self.rects:
-                i = line_intersects_rect(pos, ppos, r)
-                if i and pt_dist(pos, i) <= radius:
-                    break
+            i = line_intersects_rects(pos, ppos, self.rects)
+            if i and pt_dist(pos, i) <= radius:
+                break
             else:
                 p.die()
 

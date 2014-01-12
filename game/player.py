@@ -7,6 +7,15 @@ from .engine.evt import bmode
 
 from .entity import Entity
 from .mine import Mine
+from .util import line_intersects_rects, pt_dist
+
+
+def closest_intersect (src, dest, rects):
+    pts = line_intersects_rects(src, dest, rects, True)
+    if pts:
+        return min((pt_dist(src, i), i) for i in pts)[1]
+    else:
+        return False
 
 
 class Lasers (entity.Entity):
@@ -26,6 +35,7 @@ class Lasers (entity.Entity):
         l = conf.LAYERS['laser']
         G = gfx.Graphic
         x, y = self.player.rect.center
+        rects = self.world.rects
         pad = 5
 
         self.graphics.rm(*self.graphics)
@@ -33,6 +43,10 @@ class Lasers (entity.Entity):
         add = self.graphics.add
         for m in self.mines:
             mx, my = m.rect.center
+            i = closest_intersect((x, y), (mx, my), rects)
+            if i:
+                mx, my = i
+
             dist = ((mx - x) ** 2 + (my - y) ** 2) ** .5
             sfc = util.blank_sfc((dist + 2 * pad, w + 2 * pad))
             sfc.fill(c, (pad, pad, dist, w))
@@ -44,7 +58,13 @@ class Lasers (entity.Entity):
             add(g, -pad, -dy)
 
     def finished (self):
-        self.world.detonate_mines(self.mines, True)
+        self.world.detonate_mines(
+            [m for m in self.mines if not line_intersects_rects(
+                 self.player.rect.center, m.rect.center, self.world.rects,
+                 True
+            )],
+            True
+        )
         self.world.rm(self)
 
 
