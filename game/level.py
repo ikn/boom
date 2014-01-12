@@ -3,11 +3,11 @@ import random
 import pygame as pg
 from pygame import Rect
 from .engine import conf
-from .engine.gfx import Graphic
+from .engine.gfx import Graphic, Colour
 from .engine.game import World
 
 from .player import Player, Lasers
-from .util import Particles, tile_graphic
+from .util import Particles, tile_graphic, line_intersects_rect, pt_dist
 
 
 class Intro (World):
@@ -117,10 +117,16 @@ class Level (World):
             # else it already got removed
 
     def damage (self, pos, radius):
-        x, y = pos
         for p in self.players:
-            px, py = p.rect.center
-            if ((x - px) ** 2 + (y - py) ** 2) ** .5 <= radius:
+            ppos = p.rect.center
+            dist = pt_dist(pos, ppos)
+            if dist > radius:
+                continue
+            for r in self.rects:
+                i = line_intersects_rect(pos, ppos, r)
+                if i and pt_dist(pos, i) <= radius:
+                    break
+            else:
                 p.die()
 
     def particles (self, name, pos):

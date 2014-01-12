@@ -237,7 +237,7 @@ button _game_fullscreen DOWN
     }
     PARTICLE_DAMPING = .95
 
-    START_END_TIME = .5
+    START_END_TIME = 10
     FADE_IN_TIME = 1
     FADE_OUT_TIME = 1
     END_TIME = 2

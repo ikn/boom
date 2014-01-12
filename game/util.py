@@ -14,6 +14,57 @@ def tile_graphic (g, r, layer):
     ).crop(((0, 0), r.size))
 
 
+def sgn (x):
+    return 1 if x >= 0 else -1
+
+
+def pt_dist (a, b):
+    return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** .5
+
+
+def lines_intersect (a, b, x, y):
+    (x1, y1), (x2, y2), (x3, y3), (x4, y4) = a, b, x, y
+
+    a1 = y2 - y1
+    b1 = x1 - x2
+    c1 = x2 * y1 - x1 * y2
+    r3 = a1 * x3 + b1 * y3 + c1
+    r4 = a1 * x4 + b1 * y4 + c1
+    if r3 and r4 and sgn(r3) == sgn(r4):
+        return False
+
+    a2 = y4 - y3
+    b2 = x3 - x4
+    c2 = x4 * y3 - x3 * y4
+    r1 = a2 * x1 + b2 * y1 + c2
+    r2 = a2 * x2 + b2 * y2 + c2
+    if r1 and r2 and sgn(r1) == sgn(r2):
+        return False
+
+    denom = a1 * b2 - a2 * b1
+    if denom == 0:
+        return False
+
+    offset = abs(denom) / 2
+    return [(num + sgn(num) * offset) / denom
+            for num in (b1 * c2 - b2 * c1, a2 * c1 - a1 * c2)]
+
+
+def rect_lines (r):
+    a = r.topleft
+    for b in (r.topright, r.bottomright, r.bottomleft, r.topleft):
+        yield (a, b)
+        a = b
+
+
+def line_intersects_rect (a, b, r):
+    for x, y in rect_lines(r):
+        i = lines_intersect(a, b, x, y)
+        if i:
+            return i
+    return False
+
+
 def rand (arg):
     if isinstance(arg, dict):
         return random.gauss(arg['mean'], arg['dev'])
