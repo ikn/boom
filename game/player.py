@@ -250,10 +250,10 @@ class Player (Entity):
             if self.world.add_lasers(self):
                 self.lasers_left -= 1
 
-    def die (self):
+    def die (self, vel=(0, 0)):
         self.dead = True
         self.walk_counter.cancel()
         for l in self.legs:
             l.stop()
-        self.world.particles('die' + str(self.id), self.rect.center)
+        self.world.particles('die' + str(self.id), self.rect.center, vel)
         self.world.rm(self)

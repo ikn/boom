@@ -238,6 +238,9 @@ button _game_fullscreen DOWN
         }
     }
     PARTICLE_DAMPING = .95
+    PARTICLES_DAMPING = .95
+    EXPLOSION_SPEED = [500000, 1000] # [survive, die]
+    EXPLOSION_DROPOFF = [2, 1] # exponent; [survive, die]
 
     START_END_TIME = .5
     FADE_IN_TIME = 1

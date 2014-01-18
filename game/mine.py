@@ -69,7 +69,7 @@ class Mine (Entity):
         pos = self.rect.center
         if self.real:
             if not destroy:
-                self.world.particles('explode', pos)
+                self.world.particles('explode', pos, self.vel)
                 self.world.damage(pos, conf.MINE['explosion_radius'])
             self.world.end()
 
@@ -77,7 +77,7 @@ class Mine (Entity):
         mode = 'crumble' if destroy else ('explode' if self.real else 'dud')
         self.world.play_snd(mode)
         if mode == 'crumble':
-            self.world.particles('crumble', pos)
+            self.world.particles('crumble', pos, self.vel)
         else:
             self.world.add(DeadMine(mode, pos, self.vel, axis, sgn))
         self.world.rm(self)

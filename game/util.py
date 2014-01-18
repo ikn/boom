@@ -91,7 +91,9 @@ def rand (arg):
 
 
 class Particles (Graphic):
-    def __init__ (self, scheduler, data, pos=(0, 0), layer=0):
+    def __init__ (self, scheduler, data, pos=(0, 0), vel=(0, 0), layer=0):
+        self.vel = list(vel)
+
         self.ptcls = ptcls = []
         for g in data['colours']:
             left = g['amount']
@@ -112,6 +114,10 @@ class Particles (Graphic):
         scheduler.add_timeout(self.update, frames=1)
 
     def update (self):
+        for i in (0, 1):
+            self.vel[i] *= conf.PARTICLES_DAMPING
+        self.move_by(*self.vel)
+
         damp = conf.PARTICLE_DAMPING
         ptcls = []
         xs = []

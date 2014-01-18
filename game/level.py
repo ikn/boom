@@ -1,3 +1,4 @@
+from math import cos, sin, atan2
 import random
 
 import pygame as pg
@@ -144,17 +145,26 @@ class Level (World):
         for p in self.players:
             ppos = p.rect.center
             dist = util.pt_dist(pos, ppos)
-            if dist > radius:
-                continue
             i = util.line_intersects_rects(pos, ppos, self.rects)
             if i and util.pt_dist(pos, i) <= radius:
                 break
             else:
-                p.die()
+                die = dist <= radius
+                speed = (conf.EXPLOSION_SPEED[die] / max(dist, 50) **
+                         conf.EXPLOSION_DROPOFF[die])
+                angle = atan2(ppos[1] - pos[1], ppos[0] - pos[0])
+                vel = (speed * cos(angle), speed * sin(angle))
+                if dist > radius:
+                    # survive, but still pushed
+                    for i in (0, 1):
+                        p.vel[i] += vel[i]
+                else:
+                    p.die(vel)
 
-    def particles (self, name, pos):
+    def particles (self, name, pos, vel=(0, 0)):
         self.graphics.add(util.Particles(
-            self.scheduler, conf.PARTICLES[name], pos, conf.LAYERS['particles']
+            self.scheduler, conf.PARTICLES[name], pos, vel,
+            conf.LAYERS['particles']
         ))
 
     def end (self):
