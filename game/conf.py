@@ -175,6 +175,7 @@ button _game_fullscreen DOWN
         }
     }
 
+    BG_SPEED = {'mean': 5, 'dev': 2}
     INTRO_FRAME_WIDTH = (80, 30)
     PARTICLES = {
         # colour
@@ -237,7 +238,7 @@ button _game_fullscreen DOWN
     }
     PARTICLE_DAMPING = .95
 
-    START_END_TIME = 10
+    START_END_TIME = .5
     FADE_IN_TIME = 1
     FADE_OUT_TIME = 1
     END_TIME = 2

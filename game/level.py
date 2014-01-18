@@ -2,12 +2,37 @@ import random
 
 import pygame as pg
 from pygame import Rect
-from .engine import conf
-from .engine.gfx import Graphic, Colour
+from .engine import conf, sched
+from .engine.gfx import Graphic, Colour, GraphicsManager
 from .engine.game import World
+from .engine.util import randsgn
 
 from .player import Player, Lasers
-from .util import Particles, tile_graphic, line_intersects_rects, pt_dist
+from . import util
+
+
+def setup_bg (gm, layer, scheduler):
+    g = Graphic('background.png').resize(*gm.orig_size)
+    w = g.w
+    s = pg.Surface((w * 2, g.h))
+    s.blit(g.surface, (0, 0))
+    s.blit(g.flip(True).surface, (w, 0))
+    g = Graphic(s, layer=layer)
+    gm.add(g)
+
+    speed = util.rand(conf.BG_SPEED)
+    if speed != 0:
+        start = -w
+        end = 0
+        if randsgn() == -1:
+            start, end = end, start
+        t = float(g.w) / speed
+        scheduler.interp(
+            sched.interp_repeat(sched.interp_linear(start, (end, t)), t),
+            (g, 'x'), round_val=True
+        )
+
+    return g
 
 
 class Intro (World):
@@ -20,17 +45,18 @@ class Intro (World):
         else:
             img = '2pads'
 
-        text = Graphic('intro-{0}.png'.format(img))
         gm_r = Rect((0, 0), self.graphics.size)
         frame = gm_r.inflate(*(-2 * w for w in conf.INTRO_FRAME_WIDTH))
-        self.graphics.add(
-            tile_graphic(Graphic('solid.png'), gm_r, 2),
-            Graphic('background.png', layer=1)
-                .resize(*self.graphics.orig_size)
-                .transform('crop', frame, after='resize'),
-            text
-        )
+        viewport = GraphicsManager(self.scheduler, frame.size)
+        setup_bg(viewport, 1, self.scheduler)
+        text = Graphic('intro-{0}.png'.format(img))
+        viewport.add(text)
         text.align()
+        self.graphics.add(
+            util.tile_graphic(Graphic('solid.png'), gm_r, 1),
+            viewport
+        )
+        viewport.align()
 
         for i in xrange(n_pads):
             pg.joystick.Joystick(i).init()
@@ -54,14 +80,12 @@ class Level (World):
             self.add_player(i, self.has_real == i, lvl['spawn'][i])
 
         layers = conf.LAYERS
-        gm.add(
-            Graphic('background.png', layer=layers['bg']).resize(*gm.orig_size)
-        )
+        setup_bg(gm, layers['bg'], self.scheduler)
         g = Graphic('solid.png')
         for r in lvl['rects']:
             r = Rect(r)
             self.rects.append(r)
-            gm.add(tile_graphic(g, r, layers['rect']))
+            gm.add(util.tile_graphic(g, r, layers['rect']))
 
     def load_evts (self):
         eh = self.evthandler
@@ -119,17 +143,17 @@ class Level (World):
     def damage (self, pos, radius):
         for p in self.players:
             ppos = p.rect.center
-            dist = pt_dist(pos, ppos)
+            dist = util.pt_dist(pos, ppos)
             if dist > radius:
                 continue
-            i = line_intersects_rects(pos, ppos, self.rects)
-            if i and pt_dist(pos, i) <= radius:
+            i = util.line_intersects_rects(pos, ppos, self.rects)
+            if i and util.pt_dist(pos, i) <= radius:
                 break
             else:
                 p.die()
 
     def particles (self, name, pos):
-        self.graphics.add(Particles(
+        self.graphics.add(util.Particles(
             self.scheduler, conf.PARTICLES[name], pos, conf.LAYERS['particles']
         ))
 
