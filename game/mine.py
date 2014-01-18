@@ -3,7 +3,7 @@ from random import gauss
 
 import pygame as pg
 from pygame import Rect
-from .engine import conf, gfx, entity
+from .engine import conf, gfx, entity, sched
 from .engine.evt import bmode
 from .engine.util import randsgn
 
@@ -39,11 +39,24 @@ class Mine (Entity):
         )
 
     def collide (self, axis, sgn, v):
-        self.world.scheduler.rm_timeout(self.rotating)
+        s = self.world.scheduler
+        s.rm_timeout(self.rotating)
         for g in self.graphics:
-            g.rotate_fn = lambda sfc, angle: \
-                pg.transform.rotate(sfc, angle * 180 / pi)
-            g.angle = (pi / 2) * (2 - (axis + sgn))
+            g.angle = g.angle % (2 * pi)
+            target = (pi / 2) * (2 - (axis + sgn))
+            dist = abs(target - g.angle)
+            dist2 = abs(target + 2 * pi - g.angle)
+            if dist > dist2:
+                target += 2 * pi
+                dist = dist2
+
+            def fix_final_state ():
+                g.rotate_fn = (lambda sfc, angle:
+                    pg.transform.rotate(sfc, angle * 180 / pi))
+
+            s.interp_simple(g, 'angle', target,
+                            float(dist) / conf.MINE_FIX_ANGLE_SPEED,
+                            fix_final_state)
         self.vel = (0, 0)
         self.placed = (axis, sgn)
         self.world.play_snd('place')
