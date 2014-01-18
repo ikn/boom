@@ -178,6 +178,7 @@ button _game_fullscreen DOWN
     BG_SPEED = {'mean': 5, 'dev': 2}
     MINE_FIX_ANGLE_SPEED = 30
     INTRO_FRAME_WIDTH = (80, 30)
+    PAUSE_TINT_COLOUR = '0008'
     PARTICLES = {
         # colour
         # amount: total area

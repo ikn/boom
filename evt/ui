@@ -1,2 +1,3 @@
-button quit DOWN
+button pause DOWN
     kbd ESCAPE
+    pad button 7

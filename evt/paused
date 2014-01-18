@@ -1,0 +1,12 @@
+button quit DOWN
+    kbd q
+    kbd x
+
+button unpause DOWN
+    kbd ESCAPE
+    kbd BACKSPACE
+    kbd RETURN
+    kbd SPACE
+    pad button 7
+    pad button 0
+    pad button 1

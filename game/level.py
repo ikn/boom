@@ -65,6 +65,18 @@ class Intro (World):
                              lambda: conf.GAME.switch_world(Level)))
 
 
+class Paused (World):
+    def init (self, sfc):
+        self.evthandler.load('paused')
+        self.evthandler['unpause'].cb(lambda: conf.GAME.quit_world())
+        self.evthandler['quit'].cb(lambda: conf.GAME.quit_world(2))
+
+        self.graphics.add(
+            Graphic(sfc, layer=2).tint(conf.PAUSE_TINT_COLOUR),
+            Graphic('paused.png')
+        )[1].align()
+
+
 class Level (World):
     def init (self, colour='000'):
         self.players = []
@@ -91,7 +103,7 @@ class Level (World):
     def load_evts (self):
         eh = self.evthandler
         eh.load('ui')
-        eh['quit'].cb(lambda: conf.GAME.quit_world())
+        eh['pause'].cb(self.pause)
 
         n_pads = pg.joystick.get_count()
         if n_pads == 0:
@@ -106,6 +118,9 @@ class Level (World):
                 eh.load('x360-1')
                 eh.assign_devices(x=0, y=1)
             eh.set_deadzones(('pad', conf.PAD_DEADZONE))
+
+    def pause (self):
+        conf.GAME.start_world(Paused, self.graphics.surface)
 
     def add_player (self, n, has_real, pos):
         p = Player(n, has_real, pos)

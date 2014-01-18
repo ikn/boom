@@ -1,4 +1,4 @@
-boom (release 1): a game made for Ludum Dare 28, with the theme 'you only have
+boom (release 2): a game made for Ludum Dare 28, with the theme 'you only have
 one'.  This is a 2-player battle with mines, where each player can throw any
 number of dummy mines and only one real one.  However, one player's 'real' mine
 is a dud, and neither player knows which.
@@ -40,10 +40,14 @@ executable.
 
     CONTROLS
 
-Best played with Xbox 360 controllers (others may also work).
+Best played with Xbox 360 controllers (others may also work).  WASD in keyboard
+layouts are in the same place for the Dvorak keyboard layout too.
 
 minimise: F10
-exit: alt + F4, escape
+exit: alt + F4, close the window
+pause: escape (controller: start)
+exit when paused: Q, X
+unpause: escape, backspace, enter, space (controller: start, A, B)
 
     with controllers:
 
